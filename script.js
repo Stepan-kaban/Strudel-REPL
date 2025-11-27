@@ -24,18 +24,16 @@ register('fill', function (pat) {
 
     const onsets = haps.map(h => h.whole.begin)
       .sort((a,b)=>a.compare(b))
-      .filter((x,i,arr)=> i == arr.length-1 || x.ne(arr[i+1]));
+      .filter((x,i,arr)=> i == (arr.length-1 || x.ne(arr[i+1]));
 
     const newHaps = [];
     for (const hap of haps) {
       if (hap.part.begin.gte(state.span.end)) continue;
-
       const next = onsets.find(on => on.gte(hap.whole.end));
       if (next.lte(state.span.begin)) continue;
 
       const whole = new TimeSpan(hap.whole.begin, next);
       const part  = new TimeSpan(hap.part.begin.max(state.span.begin), next.min(state.span.end));
-
       newHaps.push(new Hap(whole, part, hap.value, hap.context, hap.stateful));
     }
     return newHaps;
@@ -51,7 +49,7 @@ register('trancegate', (density, seed, length, x) =>
 
 // quantize notes to nearest pitch in scale
 register('grab', (scale, pat) => {
-  scale = (Array.isArray(scale) ? scale : [scale]).flatMap(v =>
+  scale = (Array.isArray(scale) ? scale.flat() : [scale]).flatMap(v =>
     typeof v === 'number' ? v : noteToMidi(v) - 48
   );
 
